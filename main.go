@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"math"
 	"math/rand"
 	"time"
 )
@@ -16,45 +15,104 @@ func main() {
 		matrixCell[i] = make([]int, size)
 	}
 
-	sizeSqrt := int(math.Sqrt(float64(size)))
-	for i := 0; i < 3; i++ {
-		arr := generateRandomBox(size)
-		for x := 0; x < 3; x++ {
-			for y := 0; y < 3; y++ {
-				switch i {
-				case 0:
-					matrixCell[x][y] = arr[x][y]
-				case 1:
-					matrixCell[x+sizeSqrt][y+sizeSqrt] = arr[x][y]
-				case 2:
-					matrixCell[x+(sizeSqrt*2)][y+(sizeSqrt*2)] = arr[x][y]
-				}
-			}
-		}
-	}
-	//fill the Remaining Box
-	// fillRemainingBox(matrixCell)
-	passed, err := fill3x3(matrixCell, 3, 0)
-	// fill3x3(matrixCell, 6, 0)
-	// fill3x3(matrixCell, 6, 3)
-	// fill3x3(matrixCell, 6, 0)
-	for err != nil {
-		passed, err = fill3x3(matrixCell, 3, 0)
-		printMatrix(matrixCell)
-		if passed {
-			break
-		}
-		// fmt.Println(passed)
-	}
-	// for x := 0; x < 3; x++ {
-	// 	for y := 0; y < 3; y++ {
-	// 		fmt.Printf("Hi from, %d\n", y)
-	// 		if x == 1 && y == 1 {
-	// 			continue
+	// sizeSqrt := int(math.Sqrt(float64(size)))
+	// for i := 0; i < 3; i++ {
+	// 	arr := generateRandomBox(size)
+	// 	for x := 0; x < 3; x++ {
+	// 		for y := 0; y < 3; y++ {
+	// 			switch i {
+	// 			case 0:
+	// 				matrixCell[x][y] = arr[x][y]
+	// 			case 1:
+	// 				matrixCell[x+sizeSqrt][y+sizeSqrt] = arr[x][y]
+	// 			case 2:
+	// 				matrixCell[x+(sizeSqrt*2)][y+(sizeSqrt*2)] = arr[x][y]
+	// 			}
 	// 		}
 	// 	}
 	// }
+	//fill the Remaining Box
+	for {
+		passed, err := fill3x3(matrixCell, 0, 0)
+		if passed {
+			fmt.Println(err)
+			break
+		}
+	}
 	printMatrix(matrixCell)
+
+	for {
+		passed, err := fill3x3(matrixCell, 0, 3)
+		if passed {
+			fmt.Println(err)
+			break
+		}
+	}
+	printMatrix(matrixCell)
+
+	for {
+		passed, err := fill3x3(matrixCell, 0, 6)
+		if passed {
+			fmt.Println(err)
+			break
+		}
+	}
+	printMatrix(matrixCell)
+
+	for {
+		passed, err := fill3x3(matrixCell, 3, 0)
+		if passed {
+			fmt.Println(err)
+			break
+		}
+	}
+	printMatrix(matrixCell)
+
+	for {
+		passed, err := fill3x3(matrixCell, 3, 3)
+		if passed {
+			fmt.Println(err)
+			break
+		}
+	}
+	printMatrix(matrixCell)
+
+	for {
+		passed, err := fill3x3(matrixCell, 3, 6)
+		if passed {
+			fmt.Println(err)
+			break
+		}
+	}
+	printMatrix(matrixCell)
+
+	for {
+		passed, err := fill3x3(matrixCell, 6, 0)
+		if passed {
+			fmt.Println(err)
+			break
+		}
+	}
+	printMatrix(matrixCell)
+
+	for {
+		passed, err := fill3x3(matrixCell, 6, 3)
+		if passed {
+			fmt.Println(err)
+			break
+		}
+	}
+	printMatrix(matrixCell)
+
+	for {
+		passed, err := fill3x3(matrixCell, 6, 6)
+		if passed {
+			fmt.Println(err)
+			break
+		}
+	}
+	printMatrix(matrixCell)
+	//Fill remaining boxes with backtracking
 }
 
 func generateRandomBox(size int) [][]int {
@@ -89,7 +147,7 @@ func uniqueArrGenerator() []int {
 func printMatrix(matrixCell [][]int) {
 	for x := 0; x < 9; x++ {
 		for y := 0; y < 9; y++ {
-			fmt.Printf("%d", matrixCell[x][y])
+			fmt.Printf("%d  ", matrixCell[x][y])
 		}
 		fmt.Printf("\n")
 	}
@@ -114,40 +172,11 @@ func checkRowifSafe(matrixCell [][]int, num int, x int) bool {
 	return true
 }
 
-// func fillRemainingBox(matrixCell [][]int) {
-// 	var randNo int
-// 	for i := 0; i < 9; i++ {
-// 		for j := 0; j < 9; j++ {
-// 			if matrixCell[i][j] == 0 {
-// 				for {
-// 					randNo = rand.Intn(10-1) + 1
-// 					if checkColifSafe(matrixCell, randNo, j) && checkRowifSafe(matrixCell, randNo, i) {
-// 						matrixCell[i][j] = randNo
-// 						break
-// 					}
-// 					fmt.Println("Hi")
-// 					printMatrix(matrixCell)
-// 					fmt.Println(i)
-// 					fmt.Println(j)
-// 					fmt.Println(randNo)
-// 				}
-// 			} else {
-// 				// fmt.Println("Hi")
-// 				// fmt.Println(i)
-// 				// fmt.Println(j)
-// 				// printMatrix(matrixCell)
-// 				fmt.Printf("\n")
-// 				// fmt.Println(matrixCell[i][j])
-// 				// fmt.Println(randNo)
-// 			}
-// 		}
-// 	}
-// }
-
 func fill3x3(matrixCell [][]int, x int, y int) (bool, error) {
 	uniqueArr := uniqueArrGenerator()
+	copyUnique := make([]int, len(uniqueArr))
+	copy(copyUnique, uniqueArr)
 	count := 0
-	pass := false
 	for i := x; i < x+3; i++ {
 		for j := y; j < y+3; j++ {
 			for {
@@ -155,8 +184,6 @@ func fill3x3(matrixCell [][]int, x int, y int) (bool, error) {
 				if passed {
 					matrixCell[i][j] = uniqueArr[count]
 					uniqueArr = append(uniqueArr[:count], uniqueArr[count+1:]...)
-					fmt.Println(uniqueArr)
-					printMatrix(matrixCell)
 					count = 0
 					break
 				} else {
@@ -165,18 +192,16 @@ func fill3x3(matrixCell [][]int, x int, y int) (bool, error) {
 					} else {
 						count++
 					}
-					// if count == 9 {
-					// 	count = 0
-					// 	printMatrix(matrixCell)
-					// }
 				}
 			}
 		}
 	}
 	//put check 3x3 filled here
-	pass = check3x3Filled(matrixCell, x, y)
-	// pass = true
-	return pass, errors.New("sdasdas")
+	filled := check3x3Filled(matrixCell, x, y)
+	unique := check3x3Unique(matrixCell, copyUnique, x, y)
+	// fmt.Printf("Filled is: %t\n", filled)
+	// fmt.Printf("Unique is: %t\n", unique)
+	return (unique && filled), errors.New("Array out of bounds")
 }
 
 func check3x3Filled(matrixCell [][]int, x int, y int) bool {
@@ -184,6 +209,32 @@ func check3x3Filled(matrixCell [][]int, x int, y int) bool {
 		for j := y; j < y+3; j++ {
 			if matrixCell[i][j] == 0 {
 				return false
+			}
+		}
+	}
+
+	return true
+}
+
+func check3x3Unique(matrixCell [][]int, unique []int, x int, y int) bool {
+	copyUnique := make([]int, len(unique))
+	copy(copyUnique, unique)
+	// fmt.Println(matrixCell[0:3][0:3])
+	count := 0
+	for i := x; i < x+3; i++ {
+		for j := y; j < y+3; j++ {
+			for {
+				if matrixCell[i][j] == copyUnique[count] {
+					copyUnique = append(copyUnique[:count], copyUnique[count+1:]...)
+					count = 0
+					break
+				} else {
+					if len(copyUnique) == (count + 1) {
+						return false
+					} else {
+						count++
+					}
+				}
 			}
 		}
 	}
